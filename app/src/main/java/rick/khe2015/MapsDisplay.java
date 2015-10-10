@@ -201,7 +201,7 @@ public class MapsDisplay extends AppCompatActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_camera:
-
+                createPost();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
