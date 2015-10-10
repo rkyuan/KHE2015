@@ -22,6 +22,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -164,12 +165,13 @@ public class MapsDisplay extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, 1);
-                TransferObserver observer = transferUtility.upload(
+                //s3.putObject(new PutObjectRequest("khe2015",imageFileName,photoFile));
+               TransferObserver observer = transferUtility.upload(
                         "khe2015",     /* The bucket to upload to */
                         imageFileName,    /* The key for the uploaded object */
                         photoFile        /* The file where the data to upload exists */
                 );
-                Log.v("photopath", newPostPath);
+                System.out.println(photoFile.getTotalSpace());
             }
         }
 

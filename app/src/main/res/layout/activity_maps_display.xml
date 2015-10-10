@@ -17,10 +17,12 @@
         android:layout_weight="50" />
 
 
-    <TextView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="50"
+        android:divider="#CCCCCC"
+        android:dividerHeight="1dp"
         android:id="@+id/infotext" />
 
 </LinearLayout>
