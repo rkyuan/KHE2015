@@ -179,9 +179,16 @@ public class MapsDisplay extends AppCompatActivity {
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == 1){
+        if (requestCode == 1){//return of the image
             //upload file to server
             //File photoFile = new File(newPostPath);
+
+            //now start activity for commenting picture
+                Intent commentPic = new Intent(this,commentImage.class);
+                commentPic.putExtra("path",newPostPath);
+                startActivityForResult(commentPic,2);
+        }
+        if(requestCode == 2){//return of the comment
             AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
             TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
             TransferObserver observer = transferUtility.upload(
