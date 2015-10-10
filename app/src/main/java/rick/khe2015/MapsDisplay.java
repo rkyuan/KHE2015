@@ -196,7 +196,7 @@ public class MapsDisplay extends AppCompatActivity {
         }
         if(requestCode == 2){//return of the comment
 
-            //Log.v("comment:",data.getStringExtra("comment"));
+            Log.v("comment:",data.getStringExtra("comment"));
             AmazonS3Client s3 = new AmazonS3Client(credentialsProvider);
 
             TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());

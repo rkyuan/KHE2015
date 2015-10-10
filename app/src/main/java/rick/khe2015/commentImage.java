@@ -75,7 +75,7 @@ public class commentImage extends Activity {
                 String title = comment.getText().toString();
                 Intent result = new Intent();
                 result.putExtra("comment",title);
-                createPendingResult(2,result, PendingIntent.FLAG_ONE_SHOT);
+                setResult(RESULT_OK,result);
                 //get gps
 
                 //get time
