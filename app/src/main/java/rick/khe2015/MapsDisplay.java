@@ -195,6 +195,8 @@ public class MapsDisplay extends AppCompatActivity {
                 startActivityForResult(commentPic,2);
         }
         if(requestCode == 2){//return of the comment
+
+            //Log.v("comment:",data.getStringExtra("comment"));
             AmazonS3Client s3 = new AmazonS3Client(credentialsProvider);
 
             TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
@@ -204,6 +206,8 @@ public class MapsDisplay extends AppCompatActivity {
                     photoFile        /* The file where the data to upload exists */
             );
             postUrl=  s3.getUrl("khe2015",imageFileName);
+
+
 
         }
     }

@@ -4,6 +4,8 @@ import rick.khe2015.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 /**
@@ -60,6 +64,24 @@ public class commentImage extends Activity {
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
         final View contentView = findViewById(R.id.imageView);
+        final Button post = (Button) findViewById(R.id.save);
+        final EditText comment = (EditText) findViewById(R.id.editText);
+
+        post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //get comment
+                String title = comment.getText().toString();
+                Intent result = new Intent();
+                result.putExtra("comment",title);
+                createPendingResult(2,result, PendingIntent.FLAG_ONE_SHOT);
+                //get gps
+
+                //get time
+                finish();
+            }
+        });
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
@@ -120,6 +142,7 @@ public class commentImage extends Activity {
         // while interacting with the UI.
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
+
 
     @Override
     protected void onResume(){
