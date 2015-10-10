@@ -1,9 +1,14 @@
 package rick.khe2015;
 
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.content.Intent;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -11,12 +16,20 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MapsDisplay extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private int numDisplay;
     private Post[] posts;
     private final int POSTSIZE = 25;
+    private Handler h;
+    String newPostPath;
+    private boolean updateloop = false;
 
 
     @Override
@@ -26,13 +39,38 @@ public class MapsDisplay extends FragmentActivity {
         setUpMapIfNeeded();
         posts = new Post[POSTSIZE];
         numDisplay = 5;
+        h = new Handler();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setUpMapIfNeeded();
+        updateloop=true;
+        //h.postDelayed(update,1000);
+
     }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        updateloop = false;
+    }
+
+
+
+    private Runnable update = new Runnable(){
+        @Override
+        public void run() {
+            if(updateloop) {
+                CameraPosition pos = mMap.getCameraPosition();
+                mMap.addMarker(new MarkerOptions().position(pos.target));
+                h.postDelayed(update, 1000);
+            }else{
+                h.removeCallbacks(update);
+            }
+        }
+    };
 
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
@@ -83,6 +121,46 @@ public class MapsDisplay extends FragmentActivity {
             }
             mMap.addMarker(new MarkerOptions());
         }
+    }
+
+    private void createPost(){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                //...
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, 1);
+            }
+        }
+
+
+    }
+    private File createImageFile() throws IOException {
+
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        newPostPath = "file:" + image.getAbsolutePath();
+        return image;
     }
 
     /*
