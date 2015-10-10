@@ -51,6 +51,7 @@ public class MapsDisplay extends AppCompatActivity {
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String imageFileName;
     private File photoFile;
+    private java.net.URL postUrl;
 
 
     @Override
@@ -151,6 +152,7 @@ public class MapsDisplay extends AppCompatActivity {
     }
 
     private void createPost(){
+        Post newPost = new Post();
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -168,7 +170,7 @@ public class MapsDisplay extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, 1);
-
+                newPost.img=postUrl;
                 //now start activity for commenting picture
 //                Intent commentPic = new Intent(this,commentImage.class);
 //                commentPic.putExtra("path",newPostPath);
@@ -201,7 +203,7 @@ public class MapsDisplay extends AppCompatActivity {
                     imageFileName,    /* The key for the uploaded object */
                     photoFile        /* The file where the data to upload exists */
             );
-            java.net.URL postUrl =  s3.getUrl("khe2015",imageFileName);
+            postUrl=  s3.getUrl("khe2015",imageFileName);
 
         }
     }

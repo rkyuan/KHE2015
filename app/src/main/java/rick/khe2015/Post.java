@@ -3,19 +3,23 @@ package rick.khe2015;
 import android.media.Image;
 
 
+import java.net.URL;
 import java.util.Calendar;
 
 public class Post {
 
-    Image img;
+    java.net.URL img;
     double latitude;
     double longitude;
     Calendar postTime;
     int upVotes;
     String comment;
+    public Post(){
+    }
+
     /**
      *
-     * @param postImage
+     * @param link
      *            the image of the post
      * @param lat
      *            the latitude of the post
@@ -24,11 +28,11 @@ public class Post {
      * 
      * 
      */
-    public Post(String inputComment, Image postImage, double lat, double longi) {
+    public Post(String inputComment, URL link, double lat, double longi) {
         this.latitude = lat;
         this.longitude = longi;
         this.upVotes = 1;
-        this.img = postImage;
+        this.img = link;
         this.postTime = Calendar.getInstance();
         this.comment = inputComment;
 
@@ -71,7 +75,7 @@ public class Post {
         return this.longitude;
     }
 
-    public Image getImage() {
+    public URL getImage() {
         return this.img;
     }
 
