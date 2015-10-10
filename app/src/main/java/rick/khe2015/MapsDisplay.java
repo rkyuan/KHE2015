@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -31,6 +33,12 @@ public class MapsDisplay extends AppCompatActivity {
         setUpMapIfNeeded();
         posts = new Post[POSTSIZE];
         numDisplay = 5;
+        // Initialize the Amazon Cognito credentials provider
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-east-1:73f3c20b-bd6b-4e56-ac8b-f315813a39cd", // Identity Pool ID
+                Regions.US_EAST_1 // Region
+        );
     }
 
     @Override
