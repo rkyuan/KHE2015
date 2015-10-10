@@ -12,7 +12,7 @@ public class Post {
     double longitude;
     Calendar postTime;
     int upVotes;
-
+    String comment;
     /**
      *
      * @param postImage
@@ -24,12 +24,13 @@ public class Post {
      * 
      * 
      */
-    public Post(Image postImage, double lat, double longi) {
+    public Post(String inputComment, Image postImage, double lat, double longi) {
         this.latitude = lat;
         this.longitude = longi;
         this.upVotes = 1;
         this.img = postImage;
         this.postTime = Calendar.getInstance();
+        this.comment = inputComment;
 
     }
 
@@ -56,7 +57,7 @@ public class Post {
         double milliToHours = 1.0 / 3600000;
         sum -= 2 * this.calculateTime() * milliToHours;
         return sum;
-    }
+}
 
     public int getUpVotes() {
         return this.upVotes;
@@ -76,6 +77,17 @@ public class Post {
 
     public Calendar getPostTime() {
         return this.postTime;
+    }
+    public void incrementUpVote(){
+        this.upVotes += 1;
+    }
+    
+    public void decrementUpVote(){
+        this.upVotes -= 1;
+    }
+    
+    public String getComment(){
+        return this.comment;
     }
 
 }

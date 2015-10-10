@@ -17,11 +17,15 @@ import android.widget.Button;
 import android.content.Intent;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transfermanager.Transfer;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -171,7 +175,7 @@ public class MapsDisplay extends AppCompatActivity {
 //                startActivity(commentPic);
 
 
-                Log.v("photopath", newPostPath);
+                //Log.v("photopath", newPostPath);
             }
         }
 
@@ -189,13 +193,16 @@ public class MapsDisplay extends AppCompatActivity {
                 startActivityForResult(commentPic,2);
         }
         if(requestCode == 2){//return of the comment
-            AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+            AmazonS3Client s3 = new AmazonS3Client(credentialsProvider);
+
             TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
             TransferObserver observer = transferUtility.upload(
                     "khe2015",     /* The bucket to upload to */
                     imageFileName,    /* The key for the uploaded object */
                     photoFile        /* The file where the data to upload exists */
             );
+            java.net.URL postUrl =  s3.getUrl("khe2015",imageFileName);
+
         }
     }
 
@@ -214,6 +221,8 @@ public class MapsDisplay extends AppCompatActivity {
 
         // Save a file: path for use with ACTION_VIEW intents
         newPostPath = "file:" + image.getAbsolutePath();
+        String temp = image.getAbsolutePath().substring(storageDir.toString().length()+1,image.getAbsolutePath().length());
+        imageFileName=temp;
         return image;
     }
 
