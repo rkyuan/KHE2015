@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">KHE2015</string>
     <string name="title_activity_maps_display">Map</string>
+    <string name="action_settings">Settings</string>
 </resources>
