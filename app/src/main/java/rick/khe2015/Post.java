@@ -12,7 +12,7 @@ public class Post {
     double longitude;
     Calendar postTime;
     int upVotes;
-
+    this.comment = inputComment;
     /**
      *
      * @param postImage
@@ -76,6 +76,17 @@ public class Post {
 
     public Calendar getPostTime() {
         return this.postTime;
+    }
+    public void incrementUpVote(){
+        this.upVotes += 1;
+    }
+    
+    public void decrementUpVote(){
+        this.upVotes -= 1;
+    }
+    
+    public String getComment(){
+        return this.comment;
     }
 
 }

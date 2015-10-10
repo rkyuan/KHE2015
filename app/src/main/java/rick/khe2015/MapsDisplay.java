@@ -47,6 +47,7 @@ public class MapsDisplay extends AppCompatActivity {
     private boolean updateloop = false;
     private CognitoCachingCredentialsProvider credentialsProvider;
     private String imageFileName;
+    private File photoFile;
 
 
     @Override
@@ -151,7 +152,7 @@ public class MapsDisplay extends AppCompatActivity {
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
-            File photoFile = null;
+            photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
@@ -160,23 +161,38 @@ public class MapsDisplay extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
-                TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
+
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, 1);
-                //s3.putObject(new PutObjectRequest("khe2015",imageFileName,photoFile));
-               TransferObserver observer = transferUtility.upload(
-                        "khe2015",     /* The bucket to upload to */
-                        imageFileName,    /* The key for the uploaded object */
-                        photoFile        /* The file where the data to upload exists */
-                );
-                System.out.println(photoFile.getTotalSpace());
+
+                //now start activity for commenting picture
+//                Intent commentPic = new Intent(this,commentImage.class);
+//                commentPic.putExtra("path",newPostPath);
+//                startActivity(commentPic);
+
+
+                Log.v("photopath", newPostPath);
             }
         }
 
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == 1){
+            //upload file to server
+            //File photoFile = new File(newPostPath);
+            AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+            TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
+            TransferObserver observer = transferUtility.upload(
+                    "khe2015",     /* The bucket to upload to */
+                    imageFileName,    /* The key for the uploaded object */
+                    photoFile        /* The file where the data to upload exists */
+            );
+        }
+    }
+
     private File createImageFile() throws IOException {
 
         // Create an image file name
