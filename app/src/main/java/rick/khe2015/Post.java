@@ -1,9 +1,13 @@
-import javafx.scene.image.ImageView;
+package rick.khe2015;
+
+import android.media.Image;
+
+
 import java.util.Calendar;
 
 public class Post {
 
-    ImageView img;
+    Image img;
     double latitude;
     double longitude;
     Calendar postTime;
@@ -20,7 +24,7 @@ public class Post {
      * 
      * 
      */
-    public Post(ImageView postImage, double lat, double longi) {
+    public Post(Image postImage, double lat, double longi) {
         this.latitude = lat;
         this.longitude = longi;
         this.upVotes = 1;
@@ -66,7 +70,7 @@ public class Post {
         return this.longitude;
     }
 
-    public ImageView getImage() {
+    public Image getImage() {
         return this.img;
     }
 
