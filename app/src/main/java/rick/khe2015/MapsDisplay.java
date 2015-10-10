@@ -7,18 +7,25 @@ import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsDisplay extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
+    private int numDisplay;
+    private Post[] posts;
+    private final int POSTSIZE = 25;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_display);
         setUpMapIfNeeded();
+        posts = new Post[POSTSIZE];
+        numDisplay = 5;
     }
 
     @Override
@@ -63,6 +70,19 @@ public class MapsDisplay extends FragmentActivity {
      */
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+    }
+
+    private void updateLocation(){
+        CameraPosition pos = mMap.getCameraPosition();
+        mMap.clear();
+        //pass pos to server
+        //update posts from server
+        for (int i = 0; i <numDisplay; i++ ){
+            if(posts[i]==null){
+                break;
+            }
+            mMap.addMarker(new MarkerOptions());
+        }
     }
 
     /*
