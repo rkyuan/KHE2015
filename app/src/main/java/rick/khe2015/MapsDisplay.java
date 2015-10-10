@@ -2,6 +2,8 @@ package rick.khe2015;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -62,4 +64,15 @@ public class MapsDisplay extends FragmentActivity {
     private void setUpMap() {
         mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
+
+    /*
+        Create camera button
+     */
+
+   /* final Button cameraButton = (Button) findViewById(R.id.button_id);
+    cameraButton.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+            // Perform action on click
+        }
+    });*/
 }
