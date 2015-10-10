@@ -12,7 +12,7 @@ public class Post {
     double longitude;
     Calendar postTime;
     int upVotes;
-    //this.comment = inputComment;
+    String comment;
     /**
      *
      * @param postImage
@@ -24,12 +24,13 @@ public class Post {
      * 
      * 
      */
-    public Post(Image postImage, double lat, double longi) {
+    public Post(String inputComment, Image postImage, double lat, double longi) {
         this.latitude = lat;
         this.longitude = longi;
         this.upVotes = 1;
         this.img = postImage;
         this.postTime = Calendar.getInstance();
+        this.comment = inputComment;
 
     }
 
@@ -86,8 +87,7 @@ public class Post {
     }
     
     public String getComment(){
-        //return this.comment;
-        return "";
+        return this.comment;
     }
 
 }
