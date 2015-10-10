@@ -1,9 +1,9 @@
-import java.awt.image.BufferedImage;
+import javafx.scene.image.ImageView;
 import java.util.Calendar;
 
 public class Post {
 
-    BufferedImage img;
+    ImageView img;
     double latitude;
     double longitude;
     Calendar postTime;
@@ -20,7 +20,7 @@ public class Post {
      * 
      * 
      */
-    public Post(BufferedImage postImage, double lat, double longi) {
+    public Post(ImageView postImage, double lat, double longi) {
         this.latitude = lat;
         this.longitude = longi;
         this.upVotes = 1;
@@ -66,7 +66,7 @@ public class Post {
         return this.longitude;
     }
 
-    public BufferedImage getImage() {
+    public ImageView getImage() {
         return this.img;
     }
 
