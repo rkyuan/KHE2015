@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +17,11 @@ import android.widget.Button;
 import android.content.Intent;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
+import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -39,6 +44,8 @@ public class MapsDisplay extends AppCompatActivity {
     private Handler h;
     String newPostPath;
     private boolean updateloop = false;
+    private CognitoCachingCredentialsProvider credentialsProvider;
+    private String imageFileName;
 
 
     @Override
@@ -49,7 +56,7 @@ public class MapsDisplay extends AppCompatActivity {
         posts = new Post[POSTSIZE];
         numDisplay = 5;
         // Initialize the Amazon Cognito credentials provider
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+        credentialsProvider = new CognitoCachingCredentialsProvider(
                 getApplicationContext(),
                 "us-east-1:73f3c20b-bd6b-4e56-ac8b-f315813a39cd", // Identity Pool ID
                 Regions.US_EAST_1 // Region
@@ -152,9 +159,17 @@ public class MapsDisplay extends AppCompatActivity {
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
+                AmazonS3 s3 = new AmazonS3Client(credentialsProvider);
+                TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
                         Uri.fromFile(photoFile));
                 startActivityForResult(takePictureIntent, 1);
+                TransferObserver observer = transferUtility.upload(
+                        "khe2015",     /* The bucket to upload to */
+                        imageFileName,    /* The key for the uploaded object */
+                        photoFile        /* The file where the data to upload exists */
+                );
+                Log.v("photopath", newPostPath);
             }
         }
 
@@ -164,7 +179,7 @@ public class MapsDisplay extends AppCompatActivity {
 
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
