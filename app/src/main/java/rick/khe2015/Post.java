@@ -12,7 +12,7 @@ public class Post {
     double longitude;
     Calendar postTime;
     int upVotes;
-    this.comment = inputComment;
+    //this.comment = inputComment;
     /**
      *
      * @param postImage
@@ -56,7 +56,7 @@ public class Post {
         double milliToHours = 1.0 / 3600000;
         sum -= 2 * this.calculateTime() * milliToHours;
         return sum;
-    }
+}
 
     public int getUpVotes() {
         return this.upVotes;
@@ -86,7 +86,8 @@ public class Post {
     }
     
     public String getComment(){
-        return this.comment;
+        //return this.comment;
+        return "";
     }
 
 }
