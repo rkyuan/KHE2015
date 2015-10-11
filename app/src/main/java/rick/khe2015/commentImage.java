@@ -223,6 +223,6 @@ public class commentImage extends Activity {
      */
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
+        //mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 }

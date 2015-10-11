@@ -1,5 +1,6 @@
 package rick.khe2015;
 
+import android.location.Location;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -26,6 +27,9 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -33,12 +37,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MapsDisplay extends AppCompatActivity {
+public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
@@ -52,9 +58,17 @@ public class MapsDisplay extends AppCompatActivity {
     private String imageFileName;
     private File photoFile;
     private java.net.URL postUrl;
-
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
 
     @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+    }
+
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps_display);
@@ -68,6 +82,14 @@ public class MapsDisplay extends AppCompatActivity {
                 Regions.US_EAST_1 // Region
         );
         h = new Handler();
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+
+        mGoogleApiClient.connect();
+
     }
 
     @Override
@@ -93,6 +115,7 @@ public class MapsDisplay extends AppCompatActivity {
             if(updateloop) {
                 CameraPosition pos = mMap.getCameraPosition();
                 mMap.addMarker(new MarkerOptions().position(pos.target));
+                
                 h.postDelayed(update, 1000);
             }else{
                 h.removeCallbacks(update);
@@ -197,6 +220,19 @@ public class MapsDisplay extends AppCompatActivity {
         if(requestCode == 2){//return of the comment
 
             Log.v("comment:",data.getStringExtra("comment"));
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                    mGoogleApiClient);
+
+            if(mLastLocation!=null){
+                Log.v("lat",String.valueOf(mLastLocation.getLatitude()));
+                Log.v("long",String.valueOf(mLastLocation.getLongitude()));
+
+            }
+            else{
+                Log.v("loc","error");
+            }
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            Log.v("time",timeStamp);
             AmazonS3Client s3 = new AmazonS3Client(credentialsProvider);
 
             TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
@@ -246,6 +282,17 @@ public class MapsDisplay extends AppCompatActivity {
     /*
         Action bar created
      */
+    @Override
+    public void onConnectionSuspended(int arg0) {
+
+        // idk it says i have to have this
+
+    }
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+       // ...
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
