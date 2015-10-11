@@ -325,6 +325,8 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
                     photoFile        /* The file where the data to upload exists */
             );
             postUrl=  s3.getUrl("khe2015",imageFileName);
+            submitPost(data.getStringExtra("comment"),mLastLocation.getLatitude(),mLastLocation.getLongitude(),timeStamp,postUrl);
+
         try {
             InputStream response = new URL("http://khe2015-env.elasticbeanstalk.com/testRow.php?").openStream();
         }
@@ -338,6 +340,9 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
         }
 
         }
+    }
+    private void submitPost(String comment, double lat, double lon, String time, java.net.URL img){
+        //pass all these these things to the server
     }
 
 
