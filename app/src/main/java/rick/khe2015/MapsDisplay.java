@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.content.Intent;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.http.HttpClient;
@@ -36,6 +38,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
@@ -94,6 +97,34 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
                 .build();
 
         mGoogleApiClient.connect();
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                //find marker in posts
+                Post match = null;
+                for (Post p : posts){
+                    if (marker.getPosition().equals(new LatLng(p.latitude,p.longitude))){
+                        match = p;
+                    }
+                }
+                if (match!=null){
+                    View v = getLayoutInflater().inflate(R.layout.windowlayout, null);
+                    //add image to view
+                    ImageView iv = (ImageView) v.findViewById(R.id.coolImage);
+                    //add comment to view
+                    TextView tv = (TextView) v.findViewById(R.id.funnyCaption);
+                    tv.setText(match.comment);
+
+                }
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                return null;
+            }
+        });
 
     }
 
