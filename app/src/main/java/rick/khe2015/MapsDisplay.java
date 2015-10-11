@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 
 public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -152,13 +153,54 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
     }
 
     /**
+     * inserts the given element at the given index and pushes everything past it down
+     */
+    private static void insertElementAt(Post[] array, Post value, int index) {
+        for (int i = array.length - 1; i > index; i--) {
+            array[i] = array[i - 1];
+        }
+        array[index] = value;
+    }
+    
+    
+    /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * just add a marker near Africa.
      * <p/>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        //I am going to comment out this first line and start messing with shit
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+
+        Post[] top25 = new Post[Math.min(25, posts.length)];
+        for (int i = 0; i < posts.length; i++) {
+            double ithScore = posts[i].calculateScore();
+            for (int j = 0; j < top25.length; j++) {
+                if (top25[j] == null) {
+                    top25[j] = posts[i];
+                    break;
+                } else {
+                    if (ithScore > top25[j].calculateScore()) {
+                        swap(top25, posts[i], j);
+                        break;
+
+                    }
+                }
+            }
+        }
+        for(int i = 0; i < top25.length; i++){
+            
+            mMap.addMarker({
+                lat: top25[i].getLatitude(),
+                lng: top25[i].getLongitude(),
+                infoWindow: {
+                    content: "<p>" + top25[i].getComment + "</p><img src='myimage.jpg' alt='image in infowindow'>"
+                }
+            });
+        }
+        
+    
     }
 
     private void updateLocation(){
