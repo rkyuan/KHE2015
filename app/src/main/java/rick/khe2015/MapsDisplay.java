@@ -34,6 +34,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
@@ -49,7 +50,6 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
 
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private int numDisplay;
     private Post[] posts;
     private final int POSTSIZE = 25;
     private Handler h;
@@ -75,7 +75,6 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
         setContentView(R.layout.activity_maps_display);
         setUpMapIfNeeded();
         posts = new Post[POSTSIZE];
-        numDisplay = 5;
         // Initialize the Amazon Cognito credentials provider
         credentialsProvider = new CognitoCachingCredentialsProvider(
                 getApplicationContext(),
@@ -173,42 +172,48 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
         //I am going to comment out this first line and start messing with shit
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
-        Post[] top25 = new Post[Math.min(25, posts.length)];
-        for (int i = 0; i < posts.length; i++) {
-            double ithScore = posts[i].calculateScore();
-            for (int j = 0; j < top25.length; j++) {
-                if (top25[j] == null) {
-                    top25[j] = posts[i];
-                    break;
-                } else {
-                    if (ithScore > top25[j].calculateScore()) {
-                        swap(top25, posts[i], j);
-                        break;
-
-                    }
-                }
-            }
-        }
-        for(int i = 0; i < top25.length; i++){
-            
-            mMap.addMarker({
-                lat: top25[i].getLatitude(),
-                lng: top25[i].getLongitude(),
-                infoWindow: {
-                    content: "<p>" + top25[i].getComment + "</p><img src='myimage.jpg' alt='image in infowindow'>"
-                }
-            });
-        }
+//        Post[] top25 = new Post[Math.min(25, posts.length)];
+//        for (int i = 0; i < posts.length; i++) {
+//            double ithScore = posts[i].calculateScore();
+//            for (int j = 0; j < top25.length; j++) {
+//                if (top25[j] == null) {
+//                    top25[j] = posts[i];
+//                    break;
+//                } else {
+//                    if (ithScore > top25[j].calculateScore()) {
+//                        swap(top25, posts[i], j);
+//                        break;
+//
+//                    }
+//                }
+//            }
+//        }
+//        for(int i = 0; i < top25.length; i++){
+//
+//            mMap.addMarker({
+//                lat: top25[i].getLatitude(),
+//                lng: top25[i].getLongitude(),
+//                infoWindow: {
+//                    content: "<p>" + top25[i].getComment + "</p><img src='myimage.jpg' alt='image in infowindow'>"
+//                }
+//            });
+ //       }
         
     
     }
 
     private void updateLocation(){
-        CameraPosition pos = mMap.getCameraPosition();
+        LatLngBounds limits = mMap.getProjection().getVisibleRegion().latLngBounds;
+        double nb, sb,eb,wb;
+        nb = limits.northeast.latitude;
+        sb = limits.southwest.latitude;
+        eb = limits.northeast.longitude;
+        wb = limits.southwest.longitude;
+        //pass bounds to server
         mMap.clear();
-        //pass pos to server
+
         //update posts from server
-        for (int i = 0; i <numDisplay; i++ ){
+        for (int i = 0; i <POSTSIZE; i++ ){
             if(posts[i]==null){
                 break;
             }
