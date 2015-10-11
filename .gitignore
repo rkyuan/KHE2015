@@ -6,3 +6,44 @@
 /build
 /captures
 app/src/main/java/rick/khe2015/AWS.java
+*.fdt
+*.fdx
+*.frq
+*.lock
+PHP workspace/.metadata/.plugins/org.eclipse.core.resources/.history/97/1097b9edcd6f001517aae1c0d365b862
+*.php
+*.js
+PHP workspace/KHE2015/.project
+PHP workspace/KHE2015/.buildpath
+PHP workspace/.metadata/version.ini
+*.prefs
+PHP workspace/KHE2015/.settings/org.eclipse.wst.common.project.facet.core.xml
+*.dat
+PHP workspace/.metadata/.plugins/org.eclipse.ui.workbench/workingsets.xml
+*.json
+PHP workspace/.metadata/.plugins/org.eclipse.oomph.setup/workspace.setup
+*.tii
+PHP workspace/.metadata/.plugins/org.eclipse.wst.jsdt.core/externalLibsTimeStamps
+*.tis
+PHP workspace/.metadata/.plugins/org.eclipse.epp.logging.aeri.ui/remote-index/_1.prx
+*.nrm
+PHP workspace/.metadata/.plugins/org.eclipse.epp.logging.aeri.ui/remote-index/_1.fnm
+*.gen
+PHP workspace/.metadata/.plugins/org.eclipse.epp.logging.aeri.ui/history/_0.fnm
+*.xmi
+PHP workspace/.metadata/.plugins/org.eclipse.dltk.core/externalLibsTimeStamps
+PHP workspace/.metadata/.plugins/org.eclipse.dltk.core/customTimeStamps
+*.project
+PHP workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/.org.eclipse.dltk.core.external.folders/.location
+*.snap
+PHP workspace/.metadata/.plugins/org.eclipse.core.resources/.projects/KHE2015/.indexes/properties.index
+PHP workspace/.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index
+*.resources
+PHP workspace/.metadata/.plugins/org.eclipse.debug.core/.launches/createDB.launch
+PHP workspace/.metadata/.plugins/org.eclipse.debug.ui/launchConfigurationHistory.xml
+*.db
+PHP workspace/.metadata/.plugins/org.eclipse.epp.logging.aeri.ui/history/segments_1
+PHP workspace/.metadata/.plugins/org.eclipse.epp.logging.aeri.ui/remote-index/segments_2
+PHP workspace/.metadata/.mylyn/repositories.xml.zip
+PHP workspace/.metadata/.log
+app/httpcore-4.0.1.jar

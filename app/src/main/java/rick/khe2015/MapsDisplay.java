@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.content.Intent;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.http.HttpClient;
 import com.amazonaws.mobileconnectors.s3.transfermanager.Transfer;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
@@ -40,6 +41,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Vector;
@@ -173,32 +178,32 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
         //I am going to comment out this first line and start messing with shit
         //mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
 
-        Post[] top25 = new Post[Math.min(25, posts.length)];
-        for (int i = 0; i < posts.length; i++) {
-            double ithScore = posts[i].calculateScore();
-            for (int j = 0; j < top25.length; j++) {
-                if (top25[j] == null) {
-                    top25[j] = posts[i];
-                    break;
-                } else {
-                    if (ithScore > top25[j].calculateScore()) {
-                        swap(top25, posts[i], j);
-                        break;
-
-                    }
-                }
-            }
-        }
-        for(int i = 0; i < top25.length; i++){
-            
-            mMap.addMarker({
-                lat: top25[i].getLatitude(),
-                lng: top25[i].getLongitude(),
-                infoWindow: {
-                    content: "<p>" + top25[i].getComment + "</p><img src='myimage.jpg' alt='image in infowindow'>"
-                }
-            });
-        }
+//        Post[] top25 = new Post[Math.min(25, posts.length)];
+//        for (int i = 0; i < posts.length; i++) {
+//            double ithScore = posts[i].calculateScore();
+//            for (int j = 0; j < top25.length; j++) {
+//                if (top25[j] == null) {
+//                    top25[j] = posts[i];
+//                    break;
+//                } else {
+//                    if (ithScore > top25[j].calculateScore()) {
+//                        swap(top25, posts[i], j);
+//                        break;
+//
+//                    }
+//                }
+//            }
+//        }
+//        for(int i = 0; i < top25.length; i++){
+//
+//            mMap.addMarker({
+//                lat: top25[i].getLatitude(),
+//                lng: top25[i].getLongitude(),
+//                infoWindow: {
+//                    content: "<p>" + top25[i].getComment + "</p><img src='myimage.jpg' alt='image in infowindow'>"
+//                }
+//            });
+      //  }
         
     
     }
@@ -261,7 +266,7 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
         }
         if(requestCode == 2){//return of the comment
 
-            Log.v("comment:",data.getStringExtra("comment"));
+            //Log.v("comment:",data.getStringExtra("comment"));
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
                     mGoogleApiClient);
 
@@ -275,6 +280,7 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
             }
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             Log.v("time",timeStamp);
+
             AmazonS3Client s3 = new AmazonS3Client(credentialsProvider);
 
             TransferUtility transferUtility = new TransferUtility(s3, getApplicationContext());
@@ -284,11 +290,22 @@ public class MapsDisplay extends AppCompatActivity implements GoogleApiClient.Co
                     photoFile        /* The file where the data to upload exists */
             );
             postUrl=  s3.getUrl("khe2015",imageFileName);
-
-
+        try {
+            InputStream response = new URL("http://khe2015-env.elasticbeanstalk.com/testRow.php?").openStream();
+        }
+        catch (MalformedURLException e) {
+            // new URL() failed
+            // ...
+        }
+        catch (IOException e) {
+            // openConnection() failed
+            // ...
+        }
 
         }
     }
+
+
 
     private File createImageFile() throws IOException {
 
